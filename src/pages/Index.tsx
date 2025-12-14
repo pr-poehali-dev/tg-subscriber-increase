@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
@@ -230,7 +229,7 @@ const Index = () => {
             </p>
           </div>
 
-          <Accordion type="single" collapsible className="space-y-4">
+          <div className="space-y-4">
             {[
               {
                 question: 'Действительно ли сервис полностью бесплатный?',
@@ -253,16 +252,19 @@ const Index = () => {
                 answer: 'Абсолютно безопасно. Мы используем официальное API Telegram и не требуем доступа к вашему аккаунту. Все действия выполняются в рамках правил Telegram.',
               },
             ].map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border border-primary/20 rounded-lg px-6 bg-card">
-                <AccordionTrigger className="text-left hover:text-primary hover:no-underline">
-                  <span className="font-semibold text-lg">{item.question}</span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-base pt-2">
-                  {item.answer}
-                </AccordionContent>
-              </AccordionItem>
+              <Card key={index} className="border-primary/20 hover:border-primary/40 transition-colors">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-start gap-3">
+                    <Icon name="HelpCircle" size={24} className="text-primary flex-shrink-0 mt-1" />
+                    <span>{item.question}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-base pl-9">{item.answer}</p>
+                </CardContent>
+              </Card>
             ))}
-          </Accordion>
+          </div>
         </div>
       </section>
 
