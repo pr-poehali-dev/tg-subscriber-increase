@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import LandingPage from '@/components/LandingPage';
@@ -28,15 +28,16 @@ const Index = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [channelLink, setChannelLink] = useState('');
+  const [energy, setEnergy] = useState(100);
+  const [coins, setCoins] = useState(0);
   const { toast } = useToast();
 
-  const tasks: Task[] = [
-    { id: 1, type: 'subscribe', channel: '@tech_news_ru', reward: 10 },
-    { id: 2, type: 'view', channel: '@marketing_tips', reward: 5 },
-    { id: 3, type: 'subscribe', channel: '@crypto_signals', reward: 10 },
-    { id: 4, type: 'like', channel: '@motivation_daily', reward: 3 },
-    { id: 5, type: 'subscribe', channel: '@business_growth', reward: 10 },
-  ];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEnergy((prev) => Math.min(prev + 1, 100));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
@@ -97,17 +98,10 @@ const Index = () => {
     setChannelLink('');
   };
 
-  const handleCompleteTask = (task: Task) => {
-    if (user) {
-      setUser({
-        ...user,
-        balance: user.balance + task.reward,
-      });
-
-      toast({
-        title: `+${task.reward} баллов!`,
-        description: `Задание выполнено. Баланс: ${user.balance + task.reward}`,
-      });
+  const handleTap = () => {
+    if (energy > 0) {
+      setEnergy((prev) => prev - 1);
+      setCoins((prev) => prev + 1);
     }
   };
 
@@ -121,19 +115,16 @@ const Index = () => {
       return;
     }
 
-    if (user.balance < 50) {
+    if (coins < 50) {
       toast({
-        title: "Недостаточно баллов",
-        description: "Нужно минимум 50 баллов для получения подписчиков",
+        title: "Недостаточно коинов",
+        description: "Нужно минимум 50 коинов для получения подписчиков",
         variant: "destructive",
       });
       return;
     }
 
-    setUser({
-      ...user,
-      balance: user.balance - 50,
-    });
+    setCoins((prev) => prev - 50);
 
     toast({
       title: "🚀 Заказ создан!",
@@ -149,16 +140,17 @@ const Index = () => {
           setShowMobileMenu={setShowMobileMenu}
           scrollToSection={scrollToSection}
           onRegisterClick={() => setShowRegisterModal(true)}
-          userBalance={user.balance}
+          userBalance={coins}
           onBackToHome={() => setShowDashboard(false)}
           isDashboard={true}
         />
         <Dashboard
           user={user}
-          tasks={tasks}
+          energy={energy}
+          coins={coins}
           onAddChannel={() => setShowAddChannelModal(true)}
           onGetSubscribers={handleGetSubscribers}
-          onCompleteTask={handleCompleteTask}
+          onTap={handleTap}
         />
         <Modals
           showRegisterModal={showRegisterModal}
