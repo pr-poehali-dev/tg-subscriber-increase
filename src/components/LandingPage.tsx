@@ -254,8 +254,8 @@ const LandingPage = ({ scrollToSection, onRegisterClick }: LandingPageProps) => 
               {
                 icon: 'Mail',
                 title: 'Email',
-                content: 'support@telegrowth.ru',
-                link: 'mailto:support@telegrowth.ru',
+                content: 'telegrowth@mail.ru',
+                link: 'mailto:telegrowth@mail.ru',
               },
               {
                 icon: 'MessageCircle',
